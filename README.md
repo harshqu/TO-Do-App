@@ -1,6 +1,6 @@
 # Kanban Task Management App
 
-![Kanban Board Screenshot](Screenshot 2025-07-13 104509.png) *Add a screenshot of your app here*
+![image alt](Screenshot 2025-07-13 104509.png) 
 
 A fully functional Kanban-style task management application with light/dark mode toggle. This app allows you to create, edit, and delete boards, columns, and tasks with a drag-and-drop interface.
 
