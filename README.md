@@ -1,6 +1,6 @@
 # Kanban Task Management App
 
-![image alt]([Screenshot 2025-07-13 104509.png](https://github.com/harshqu/TO-Do-App/blob/daeb011041da9ffb6b988380a2ad7b4ef9f02eab/Screenshot%202025-07-13%20104509.png)) 
+![image alt](https://github.com/harshqu/TO-Do-App/blob/daeb011041da9ffb6b988380a2ad7b4ef9f02eab/Screenshot%202025-07-13%20104509.png)
 
 A fully functional Kanban-style task management application with light/dark mode toggle. This app allows you to create, edit, and delete boards, columns, and tasks with a drag-and-drop interface.
 
