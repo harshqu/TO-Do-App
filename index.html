@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Task Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">K</div>
+                    <div class="logo-text">kanban</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-title">All Boards (<span id="board-count">3</span>)</div>
+            
+            <ul class="board-list" id="board-list">
+                <li class="board-item active" data-board-id="1">
+                    <i class="fas fa-columns board-icon"></i>
+                    <span class="board-name">Platform Launch</span>
+                </li>
+                <li class="board-item" data-board-id="2">
+                    <i class="fas fa-columns board-icon"></i>
+                    <span class="board-name">Marketing Plan</span>
+                </li>
+                <li class="board-item" data-board-id="3">
+                    <i class="fas fa-columns board-icon"></i>
+                    <span class="board-name">Roadmap</span>
+                </li>
+                <li class="board-item create-board" id="create-board-btn">
+                    <i class="fas fa-columns board-icon"></i>
+                    <span class="board-name">+ Create New Board</span>
+                </li>
+            </ul>
+            
+            <div class="theme-toggle">
+                <i class="fas fa-sun"></i>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+                <i class="fas fa-moon"></i>
+            </div>
+            
+            <div class="hide-sidebar">
+                <i class="fas fa-eye-slash"></i>
+                <span>Hide Sidebar</span>
+            </div>
+        </div>
+        
+        <div class="show-sidebar">
+            <i class="fas fa-eye" style="color: white;"></i>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div class="board-name-header">
+                    <i class="fas fa-columns"></i>
+                    <span id="current-board-name">Platform Launch</span>
+                </div>
+                
+                <div class="board-actions">
+                    <button class="add-task-btn" id="add-task-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Add New Task</span>
+                    </button>
+                    <div class="dropdown" id="board-options">
+                        <div class="vertical-dots">
+                            <i class="fas fa-ellipsis-vertical"></i>
+                        </div>
+                        <div class="dropdown-content">
+                            <div class="dropdown-item" id="edit-board-btn">Edit Board</div>
+                            <div class="dropdown-item delete" id="delete-board-btn">Delete Board</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="kanban-board" id="kanban-board">
+                <!-- Columns will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- All Modals -->
+    <!-- Add Task Modal -->
+    <div class="modal" id="task-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Add New Task</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="task-form">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input" id="task-title" placeholder="e.g. Take coffee break" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" id="task-description" rows="3" placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Subtasks</label>
+                    <div class="subtasks-list" id="subtasks-list">
+                        <div class="subtask-item">
+                            <input type="text" class="form-input subtask-input" placeholder="e.g. Make coffee">
+                            <i class="fas fa-times remove-subtask"></i>
+                        </div>
+                        <div class="subtask-item">
+                            <input type="text" class="form-input subtask-input" placeholder="e.g. Drink coffee & smile">
+                            <i class="fas fa-times remove-subtask"></i>
+                        </div>
+                    </div>
+                    <button type="button" class="add-subtask" id="add-subtask">+ Add New Subtask</button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select class="form-input" id="task-status"></select>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Create Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div class="modal" id="edit-task-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Edit Task</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="edit-task-form">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input" id="edit-task-title" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" id="edit-task-description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Subtasks</label>
+                    <div class="subtasks-list" id="edit-subtasks-list"></div>
+                    <button type="button" class="add-subtask" id="edit-add-subtask">+ Add New Subtask</button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select class="form-input" id="edit-task-status"></select>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Task Modal -->
+    <div class="modal confirmation-modal" id="delete-task-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Delete Task</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="confirmation-text">
+                Are you sure you want to delete this task? This action cannot be undone.
+            </div>
+            <div class="modal-actions">
+                <button class="btn-danger" id="confirm-delete-task">Delete</button>
+                <button class="btn-secondary" id="cancel-delete-task">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Column Modal -->
+    <div class="modal" id="column-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Add New Column</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="column-form">
+                <div class="form-group">
+                    <label class="form-label">Column Name</label>
+                    <input type="text" class="form-input" id="column-name" placeholder="e.g. In Progress" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Column Color</label>
+                    <div class="column-color-picker">
+                        <div class="color-option selected" style="background-color: #49C4E5;" data-color="#49C4E5"></div>
+                        <div class="color-option" style="background-color: #FF9898;" data-color="#FF9898"></div>
+                        <div class="color-option" style="background-color: #635FC7;" data-color="#635FC7"></div>
+                        <div class="color-option" style="background-color: #67E2AE;" data-color="#67E2AE"></div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Create Column</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Column Modal -->
+    <div class="modal" id="edit-column-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Edit Column</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="edit-column-form">
+                <div class="form-group">
+                    <label class="form-label">Column Name</label>
+                    <input type="text" class="form-input" id="edit-column-name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Column Color</label>
+                    <div class="column-color-picker" id="edit-column-colors">
+                        <div class="color-option selected" style="background-color: #49C4E5;" data-color="#49C4E5"></div>
+                        <div class="color-option" style="background-color: #FF9898;" data-color="#FF9898"></div>
+                        <div class="color-option" style="background-color: #635FC7;" data-color="#635FC7"></div>
+                        <div class="color-option" style="background-color: #67E2AE;" data-color="#67E2AE"></div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Column Modal -->
+    <div class="modal confirmation-modal" id="delete-column-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Delete Column</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="confirmation-text">
+                Are you sure you want to delete this column and all its tasks? This action cannot be undone.
+            </div>
+            <div class="modal-actions">
+                <button class="btn-danger" id="confirm-delete-column">Delete</button>
+                <button class="btn-secondary" id="cancel-delete-column">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Board Modal -->
+    <div class="modal" id="board-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Add New Board</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="board-form">
+                <div class="form-group">
+                    <label class="form-label">Board Name</label>
+                    <input type="text" class="form-input" id="board-name" placeholder="e.g. Web Development" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Columns</label>
+                    <div id="board-columns-list">
+                        <div class="subtask-item">
+                            <input type="text" class="form-input subtask-input" value="Todo">
+                            <i class="fas fa-times remove-column"></i>
+                        </div>
+                        <div class="subtask-item">
+                            <input type="text" class="form-input subtask-input" value="Doing">
+                            <i class="fas fa-times remove-column"></i>
+                        </div>
+                    </div>
+                    <button type="button" class="add-subtask" id="add-board-column">+ Add New Column</button>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Create Board</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Board Modal -->
+    <div class="modal" id="edit-board-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Edit Board</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="edit-board-form">
+                <div class="form-group">
+                    <label class="form-label">Board Name</label>
+                    <input type="text" class="form-input" id="edit-board-name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Columns</label>
+                    <div id="edit-board-columns-list"></div>
+                    <button type="button" class="add-subtask" id="edit-add-board-column">+ Add New Column</button>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Board Modal -->
+    <div class="modal confirmation-modal" id="delete-board-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Delete Board</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="confirmation-text">
+                Are you sure you want to delete this board and all its data? This action cannot be undone.
+            </div>
+            <div class="modal-actions">
+                <button class="btn-danger" id="confirm-delete-board">Delete</button>
+                <button class="btn-secondary" id="cancel-delete-board">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
